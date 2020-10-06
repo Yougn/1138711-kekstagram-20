@@ -34,15 +34,15 @@ var createComment = function () {
 };
 
 var getRandomCommentsList = function () {
-  var commentsList = [];
-  for (var i = 0; i < COMMENTS_NUMBER; i++) {
-    commentsList.push(createComment());
+  var commentsLists = [];
+  var randomNumber = getRandomInteger(1,NUMBER)
+  for (var i = 0; i < randomNumber; i++) {
+    commentsLists.push(createComment());
   }
-  var maxNumber = 10;
-  return commentsList.slice(0, getRandomInteger(1, maxNumber));
+  return commentsLists;
 };
 
-var getObject = function (number) {
+var getObjectPicture = function (number) {
   return {
     url: 'photos/' + number + '.jpg',
     description: getRandomElement(DESCRIPTIONS),
@@ -52,14 +52,15 @@ var getObject = function (number) {
 };
 
 var getObjectsList = function (number) {
-  var blocks = [];
+  var objectLists = [];
   for (var i = 0; i < number; i++) {
-    blocks.push(getObject(i));
+    objectLists.push(getObjectPicture(i));
   }
-  return blocks;
+  return objectLists;
 };
 
 var photos = getObjectsList(NUMBER);
+console.log(photos);
 
 var pictureList = document.querySelector('.pictures')
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
