@@ -281,19 +281,36 @@ var textHashtags = document.querySelector('.text__hashtags');
 
 textHashtags.addEventListener('input', function () {
   var textHashtagsValue = textHashtags.value;
-  var textLists = textHashtagsValue.toLowerCase().split(' ');
 
-  for (var i = 0; i < textLists.length; i++) {
-    if (!textLists[i].includes('#')) {
+  var validHashtag = function () {
+    if (!textHashtagsValue.includes('#')) {
       textHashtags.setCustomValidity('Хеш-тег должен начинаться с символа #');
-    } else if (!textLists[i].match(/(^#[a-zA-Zа-яА-Я0-9]*$)/g)) {
+    } else if (!textHashtagsValue.match(/(^#[a-zA-Zа-яА-Я0-9]*$)/g)) {
       textHashtags.setCustomValidity('Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы, эмодзи и т. д.')
-    } else if (textLists[i].length === MIN_LENGTH) {
+    } else if (textHashtagsValue.length === MIN_LENGTH) {
       textHashtags.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
-    } else if (textLists[i].length > MAX_LENGTH) {
+    } else if (textHashtagsValue.length > MAX_LENGTH) {
       textHashtags.setCustomValidity('Максимальная длина одного хэш-тега  состовляет 20 символов включая решетку');
     } else {
       textHashtags.setCustomValidity('');
     }
+  };
+
+  var textLists = textHashtagsValue.toLowerCase().split(' ');
+  var arrayHashtags = [];
+
+  for (var i = 0; i < textLists.length; i++) {
+    validHashtag(textLists[i]);
+
+    if (textLists.length > 5) {
+      textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+    }
+
+    if (arrayHashtags.includes(textLists[i])) {
+      textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+    } else {
+      arrayHashtags.push(textLists[i]);
+    }
   }
+
 });
