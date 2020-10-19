@@ -21,6 +21,9 @@ var MIN_SIZE = 25;
 var MAX_SIZE = 100;
 var MIN_LENGTH = 1;
 var MAX_LENGTH = 19;
+var MIN_BRIGHTNESS = 1;
+var MAX_BRIGHTNESS = 3;
+var NUMBER_HASHTAGS = 5;
 
 var getRandomInteger = function (min, max) {
   var rand = min + Math.random() * (max + 1 - min);
@@ -143,27 +146,44 @@ var renderBigPicture = function (photo) {
 
 renderBigPicture(photos[0]);
 
-
 var uploadFile = document.querySelector('#upload-file');
-
-var showFormImage = function () {
-  var formImage = document.querySelector('.img-upload__overlay');
-  formImage.classList.remove('hidden');
-}
 
 uploadFile.addEventListener('change', function () {
   showFormImage();
 });
+
+var showFormImage = function () {
+  var formImage = document.querySelector('.img-upload__overlay');
+  formImage.classList.remove('hidden');
+
+  var body = document.querySelector('body');
+  body.classList.add('modal-open');
+
+  document.addEventListener('keydown', keyDownHandler);
+};
 
 var closeFormImage = function () {
   var formImage = document.querySelector('.img-upload__overlay');
   formImage.classList.add('hidden');
 
   uploadFile.value = '';
+  cleanForm();
 
   var body = document.querySelector('body');
   body.classList.remove('modal-open');
-}
+
+  deleteHandler();
+};
+
+var keyDownHandler = function (evt) {
+  if (evt.key === 'Escape' && evt.target.className !== 'text__hashtags' && evt.target.className !== 'text__description') {
+    closeFormImage();
+  }
+};
+
+var deleteHandler = function () {
+  document.removeEventListener('keydown', keyDownHandler);
+};
 
 var buttonCloseImage = document.querySelector('.img-upload__cancel');
 
@@ -171,14 +191,28 @@ buttonCloseImage.addEventListener('click', function () {
   closeFormImage();
 });
 
-document.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Escape') {
-    closeFormImage();
-  }
-});
+var pictureFilter = document.querySelector('.img-upload__preview');
+
+var cleanForm = function () {
+  pictureFilter.style.transform = 'scale(1)';
+
+  if (pictureFilter.classList.contains('effects__preview--chrome')) {
+    pictureFilter.classList.remove('effects__preview--chrome')
+  } else if (pictureFilter.classList.contains('effects__preview--sepia')) {
+    pictureFilter.classList.remove('effects__preview--sepia')
+  } else if (pictureFilter.classList.contains('effects__preview--marvin')) {
+    pictureFilter.classList.remove('effects__preview--marvin')
+  } else if (pictureFilter.classList.contains('effects__preview--phobos')) {
+    pictureFilter.classList.remove('effects__preview--phobos')
+  } else if (pictureFilter.classList.contains('effects__preview--heat')) {
+    pictureFilter.classList.remove('effects__preview--heat')
+  };
+
+  var mainForm = document.querySelector('.img-upload__form');
+  mainForm.reset();
+};
 
 var sliderPin = document.querySelector('.effect-level__pin');
-var pictureFilter = document.querySelector('.img-upload__preview');
 
 var getSliderPinPosition = function () {
   var x = sliderPin.offsetLeft;
@@ -191,32 +225,30 @@ var getLevelEffect = function () {
 };
 
 var changeEffectInput = function () {
-  var levelValue = document.querySelector('.effect-level__value').value;
-  levelValue = getLevelEffect() + '%';
-  return levelValue;
-}
+  var levelValue = document.querySelector('.effect-level__value');
+  levelValue.value = getLevelEffect() + '%';
+};
+
+var closeSlider = function () {
+  var slider = pictureFilter.querySelector('.img-upload__effects');
+  slider.classList.add('hidden');
+};
 
 var regulateLevelEffect = function () {
 
   if (pictureFilter.classList.contains('effects__preview--chrome')) {
-    var filterChrome = document.querySelector('.effects__preview--chrome')
-    filterChrome.style.filter = 'grayscale(' + getLevelEffect() / 100 + ')';
+    pictureFilter.style.filter = 'grayscale(' + getLevelEffect() / 100 + ')';
   } else if (pictureFilter.classList.contains('effects__preview--sepia')) {
-    var filterSepia = document.querySelector('.effects__preview--sepia')
-    filterSepia.style.filter = 'sepia(' + getLevelEffect() / 100 + ')';
+    pictureFilter.style.filter = 'sepia(' + getLevelEffect() / 100 + ')';
   } else if (pictureFilter.classList.contains('effects__preview--marvin')) {
-    var filterMarvin = document.querySelector('.effects__preview--marvin')
-    filterMarvin.style.filter = 'invert(' + getLevelEffect() + '%)';
+    pictureFilter.style.filter = 'invert(' + getLevelEffect() + '%)';
   } else if (pictureFilter.classList.contains('effects__preview--phobos')) {
-    var filterPhobos = document.querySelector('.effects__preview--phobos')
-    filterPhobos.style.filter = 'blur(' + getLevelEffect() / 100 * 3 + 'px)';
+    pictureFilter.style.filter = 'blur(' + getLevelEffect() / 100 * 3 + 'px)';
   } else if (pictureFilter.classList.contains('effects__preview--heat')) {
-    var filterHeat = document.querySelector('.effects__preview--heat')
-    filterHeat.style.filter = 'brightness(' + getLevelEffect() / 100 * 3 + ')';
+    pictureFilter.style.filter = 'brightness(' + getRandomInteger(MIN_BRIGHTNESS, MAX_BRIGHTNESS) + ')';
   } else if (pictureFilter.classList.contains('effects__preview--none')) {
-    var slider = document.querySelector('.img-upload__effects')
-    slider.classList.add('hidden');
-  }
+    closeSlider();
+  };
 
   changeEffectInput();
 };
@@ -225,29 +257,23 @@ sliderPin.addEventListener('mouseup', function () {
   regulateLevelEffect();
 });
 
-var changeFilterPicture = function () {
-  var radioFilter = document.querySelectorAll('.effects__radio');
+var effectList = document.querySelector('.effects__list');
+var currentFilter = pictureFilter.classList.item(1);
 
-  for (var i = 0; i < radioFilter.length; i++) {
-    radioFilter[i].addEventListener('change', function (evt) {
-      var choise = evt.target.value;
-      pictureFilter.classList.add('effects__preview--' + choise);
-      if (pictureFilter.classList.length > 2) {
-        pictureFilter.classList.remove('effects__preview--none');
-        pictureFilter.classList.remove('effects__preview--chrome');
-        pictureFilter.classList.remove('effects__preview--sepia');
-        pictureFilter.classList.remove('effects__preview--marvin');
-        pictureFilter.classList.remove('effects__preview--phobos');
-        pictureFilter.classList.remove('effects__preview--heat');
-        pictureFilter.classList.add('effects__preview--' + choise);
-      }
-    })
+effectList.addEventListener('change', function (evt) {
+  var choise = evt.target.value;
+
+  if (currentFilter) {
+    pictureFilter.classList.remove(currentFilter);
   };
-};
 
-changeFilterPicture();
+  pictureFilter.classList.add('effects__preview--' + choise);
 
-var changePictureSize = function () {
+  var newFilter = pictureFilter.classList.item(1);
+  currentFilter = newFilter;
+});
+
+var controlSizePicture = function () {
   var buttonPlus = document.querySelector('.scale__control--bigger');
   var buttonMinus = document.querySelector('.scale__control--smaller');
   var fieldControl = document.querySelector('.scale__control--value');
@@ -262,7 +288,7 @@ var changePictureSize = function () {
     if (fieldControlValue < MAX_SIZE) {
       fieldControlValue += STEP;
       fieldControl.value = fieldControlValue + "%";
-    } else { return MAX_SIZE + "%" }
+    };
     changeSize();
   });
 
@@ -270,12 +296,12 @@ var changePictureSize = function () {
     if (fieldControlValue > MIN_SIZE) {
       fieldControlValue -= STEP;
       fieldControl.value = fieldControlValue + "%";
-    } else { return MIN_SIZE + "%" }
+    };
     changeSize();
   });
 };
 
-changePictureSize();
+controlSizePicture();
 
 var textHashtags = document.querySelector('.text__hashtags');
 
@@ -283,7 +309,7 @@ textHashtags.addEventListener('input', function () {
   var textHashtagsValue = textHashtags.value;
 
   var validHashtag = function () {
-    if (!textHashtagsValue.includes('#')) {
+    if (!textHashtagsValue[0].includes('#')) {
       textHashtags.setCustomValidity('Хеш-тег должен начинаться с символа #');
     } else if (!textHashtagsValue.match(/(^#[a-zA-Zа-яА-Я0-9]*$)/g)) {
       textHashtags.setCustomValidity('Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы, эмодзи и т. д.')
@@ -297,20 +323,25 @@ textHashtags.addEventListener('input', function () {
   };
 
   var textLists = textHashtagsValue.toLowerCase().split(' ');
-  var arrayHashtags = [];
+  var textListsNumber = textLists.length;
+  var arraysHashtags = [];
 
-  for (var i = 0; i < textLists.length; i++) {
-    validHashtag(textLists[i]);
+  for (var i = 0; i < textListsNumber; i++) {
+    var isHashtagValid = validHashtag(textListsNumber[i]);
 
-    if (textLists.length > 5) {
+    if (!isHashtagValid) {
+      break
+    };
+
+    if (textListsNumber > NUMBER_HASHTAGS) {
       textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
     }
 
-    if (arrayHashtags.includes(textLists[i])) {
+    if (arraysHashtags.includes(textListsNumber[i])) {
       textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
     } else {
-      arrayHashtags.push(textLists[i]);
+      arraysHashtags.push(textListsNumber[i]);
     }
-  }
+  };
 
 });
