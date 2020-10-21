@@ -198,9 +198,7 @@ var cleanForm = function () {
   pictureFilter.style.transform = 'scale(1)';
   pictureFilter.style.filter = '';
 
-  if (pictureFilter.classList.contains('effects__preview--' + currentFilter)) {
-    pictureFilter.classList.remove('effects__preview--' + currentFilter)
-  };
+  pictureFilter.classList.remove('effects__preview--' + currentFilter)
 
   var mainForm = document.querySelector('.img-upload__form');
   mainForm.reset();
@@ -224,13 +222,13 @@ var changeEffectInput = function () {
   levelValue.value = getLevelEffect() + '%';
 };
 
+var slider = document.querySelector('.img-upload__effects');
+
 var openSlider = function () {
-  var slider = document.querySelector('.img-upload__effects');
   slider.classList.remove('hidden');
 };
 
 var closeSlider = function () {
-  var slider = document.querySelector('.img-upload__effects');
   slider.classList.add('hidden');
 };
 
@@ -323,27 +321,27 @@ textHashtags.addEventListener('input', function () {
     }
   };
 
-  var hashtagList = textHashtagsValue.toLowerCase().split(' ');
-  var blockHashtgsNumber = hashtagList.length;
+  var hashtagLists = textHashtagsValue.toLowerCase().split(' ');
+  var blockHashtagElements = hashtagLists.length;
   var blockHashtags = [];
 
-  if (blockHashtgsNumber > NUMBER_HASHTAGS) {
-    textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
-  };
+  for (var i = 0; i < blockHashtagElements; i++) {
+    var isHashtagValid = validHashtag(blockHashtagElements[i]);
 
-  for (var i = 0; i < blockHashtgsNumber; i++) {
-    var isHashtagValid = validHashtag(blockHashtgsNumber[i]);
-
-    if (!isHashtagValid) {
-      break
+    if (blockHashtagElements > NUMBER_HASHTAGS) {
+      textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+      break;
     };
 
-    if (blockHashtags.includes(blockHashtgsNumber[i])) {
+    if (!isHashtagValid) {
+      break;
+    };
+
+    if (blockHashtags.includes(blockHashtagElements[i])) {
       textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       break;
     } else {
-      blockHashtags.push(blockHashtgsNumber[i]);
+      blockHashtags.push(blockHashtagElements[i]);
     }
   };
-
 });
