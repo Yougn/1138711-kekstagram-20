@@ -170,7 +170,6 @@ var closeFormImage = function () {
   uploadFile.value = '';
   cleanForm();
 
-  var body = document.querySelector('body');
   body.classList.remove('modal-open');
 
   deleteHandler();
@@ -261,14 +260,10 @@ var currentFilter;
 
 effectList.addEventListener('change', function (evt) {
   var choise = evt.target.value;
-  var newFilter = choise;
 
-  if (currentFilter !== newFilter) {
-    pictureFilter.classList.remove('effects__preview--' + currentFilter);
-  };
-
+  pictureFilter.classList.remove('effects__preview--' + currentFilter);
   pictureFilter.classList.add('effects__preview--' + choise);
-  currentFilter = newFilter;
+  currentFilter = choise;
 
   if (('effects__preview--' + currentFilter) === 'effects__preview--none') {
     pictureFilter.style.filter = '';
@@ -321,27 +316,27 @@ textHashtags.addEventListener('input', function () {
     }
   };
 
-  var hashtagLists = textHashtagsValue.toLowerCase().split(' ');
-  var blockHashtagElements = hashtagLists.length;
+  var hashtags = textHashtagsValue.toLowerCase().split(' ');
+  var hashtagsNumber = hashtags.length;
   var blockHashtags = [];
 
-  for (var i = 0; i < blockHashtagElements; i++) {
-    var isHashtagValid = validHashtag(blockHashtagElements[i]);
+  if (hashtagsNumber > NUMBER_HASHTAGS) {
+    textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+    return;
+  };
 
-    if (blockHashtagElements > NUMBER_HASHTAGS) {
-      textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
-      break;
-    };
+  for (var i = 0; i < hashtagsNumber; i++) {
+    var isHashtagValid = validHashtag(hashtagsNumber[i]);
 
     if (!isHashtagValid) {
       break;
     };
 
-    if (blockHashtags.includes(blockHashtagElements[i])) {
+    if (blockHashtags.includes(hashtagsNumber[i])) {
       textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       break;
     } else {
-      blockHashtags.push(blockHashtagElements[i]);
-    }
+      blockHashtags.push(hashtagsNumber[i]);
+    };
   };
 });
