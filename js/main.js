@@ -60,14 +60,14 @@ var getObjectPicture = function (number) {
     description: getRandomElement(DESCRIPTIONS),
     likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
     comments: getRandomCommentsList()
-  }
+  };
 };
 
 var getObjectsList = function (number) {
   var objectLists = [];
   for (var i = 0; i < number; i++) {
     objectLists.push(getObjectPicture(i));
-  }
+  };
   return objectLists;
 };
 
@@ -76,12 +76,14 @@ var photos = getObjectsList(NUMBER);
 var pictureList = document.querySelector('.pictures')
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
-var renderPicture = function (photo) {
+var renderPicture = function (photo, count) {
   var picture = pictureTemplate.cloneNode(true);
 
   picture.querySelector('img').src = photo.url;
+  picture.querySelector('img').dataset.id = count;
   picture.querySelector('.picture__info .picture__likes').textContent = photo.likes;
   picture.querySelector('.picture__info .picture__comments').textContent = photo.comments;
+  picture.id = count;
 
   return picture;
 };
@@ -89,15 +91,14 @@ var renderPicture = function (photo) {
 var createFragment = function (photos) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < photos.length; i++) {
-    fragment.appendChild(renderPicture(photos[i]));
-  }
+    fragment.appendChild(renderPicture(photos[i], i));
+  };
   return fragment;
 };
 
 pictureList.appendChild(createFragment(photos));
 
 var bigPicture = document.querySelector('.big-picture');
-// bigPicture.classList.remove('hidden');
 var body = document.querySelector('body');
 
 var renderBigPicture = function (photo) {
@@ -141,12 +142,55 @@ var renderBigPicture = function (photo) {
 
   var commentLoader = document.querySelector('.comments-loader');
   commentLoader.classList.add('hidden');
-
-  var body = document.querySelector('body');
   body.classList.add('modal-open');
 }
 
-renderBigPicture(photos[0]);
+var closePicture = function () {
+  bigPicture.classList.add('hidden');
+  body.classList.remove('modal-open');
+  deletePictureKeyDownHandler();
+};
+
+var buttonCloseBigPicture = document.querySelector('.big-picture__cancel');
+buttonCloseBigPicture.addEventListener('click', function () {
+  closePicture();
+});
+
+var pictureKeyDownHandler = function (evt) {
+  if (evt.key === 'Escape') {
+    closePicture();
+  };
+};
+
+var deletePictureKeyDownHandler = function () {
+  document.removeEventListener('keydown', pictureKeyDownHandler);
+};
+
+pictureList.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    var id = evt.target.id;
+
+    if (!id || id === 'upload-file') {
+      return;
+    };
+
+    bigPicture.classList.remove('hidden');
+    renderBigPicture(photos[id]);
+    document.addEventListener('keydown', pictureKeyDownHandler);
+  };
+});
+
+pictureList.addEventListener('click', function (evt) {
+  var id = evt.target.dataset.id;
+
+  if (!id) {
+    return;
+  };
+
+  bigPicture.classList.remove('hidden');
+  renderBigPicture(photos[id]);
+  document.addEventListener('keydown', pictureKeyDownHandler);
+});
 
 var uploadFile = document.querySelector('#upload-file');
 
@@ -186,7 +230,6 @@ var deleteHandler = function () {
 };
 
 var buttonCloseImage = document.querySelector('.img-upload__cancel');
-
 buttonCloseImage.addEventListener('click', function () {
   closeFormImage();
 });
@@ -269,7 +312,6 @@ effectList.addEventListener('change', function (evt) {
     pictureFilter.style.filter = '';
     closeSlider();
   };
-
 });
 
 var controlSizePicture = function () {
@@ -313,30 +355,30 @@ textHashtags.addEventListener('input', function () {
       textHashtags.setCustomValidity('Максимальная длина одного хэш-тега  состовляет 20 символов включая решетку');
     } else {
       textHashtags.setCustomValidity('');
-    }
+    };
   };
 
   var hashtags = textHashtagsValue.toLowerCase().split(' ');
-  var hashtagsNumber = hashtags.length;
+  var hashtagsLength = hashtags.length;
   var blockHashtags = [];
 
-  if (hashtagsNumber > NUMBER_HASHTAGS) {
+  if (hashtagsLength > NUMBER_HASHTAGS) {
     textHashtags.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
     return;
   };
 
-  for (var i = 0; i < hashtagsNumber; i++) {
-    var isHashtagValid = validHashtag(hashtagsNumber[i]);
+  for (var i = 0; i < hashtagsLength; i++) {
+    var isHashtagValid = validHashtag(hashtagsLength[i]);
 
     if (!isHashtagValid) {
       break;
     };
 
-    if (blockHashtags.includes(hashtagsNumber[i])) {
+    if (blockHashtags.includes(hashtagsLength[i])) {
       textHashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       break;
     } else {
-      blockHashtags.push(hashtagsNumber[i]);
+      blockHashtags.push(hashtagsLength[i]);
     };
   };
 });
