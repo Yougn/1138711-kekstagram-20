@@ -2,7 +2,7 @@
 
 (function () {
 
-  window.photos = getObjectsList(window.main.NUMBER);
+  // window.photos = getObjectsList(window.main.NUMBER); Подключение моковых данных
 
   var pictureList = document.querySelector('.pictures')
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -27,6 +27,10 @@
     return fragment;
   };
 
-  pictureList.appendChild(createFragment(photos));
+  // Загрузка фотографий с сервера
+  window.backend.load(function (photos) {
+    pictureList.appendChild(createFragment(photos));
+    window.photos = photos;
+  }, window.showErrorMessage);
 
 })();

@@ -2,18 +2,7 @@
 
 (function () {
 
-  window.pictureFilter = document.querySelector('.img-upload__preview');
-
-  window.cleanForm = function () {
-    pictureFilter.style.transform = 'scale(1)';
-    pictureFilter.style.filter = '';
-
-    pictureFilter.classList.remove('effects__preview--' + currentFilter);
-
-    var mainForm = document.querySelector('.img-upload__form');
-    mainForm.reset();
-    openSlider();
-  };
+  var pictureFilter = document.querySelector('.img-upload__preview');
 
   var sliderPin = document.querySelector('.effect-level__pin');
 
@@ -121,5 +110,17 @@
       closeSlider();
     };
   });
+
+  window.pictureFilter = {
+    pictureFilter: pictureFilter,
+    cleanForm: function () {
+      pictureFilter.style.transform = 'scale(1)';
+      pictureFilter.style.filter = '';
+      pictureFilter.classList.remove('effects__preview--' + currentFilter);
+      var mainForm = document.querySelector('.img-upload__form');
+      mainForm.reset();
+      openSlider();
+    }
+  };
 
 })();

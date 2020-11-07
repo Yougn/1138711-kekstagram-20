@@ -5,8 +5,8 @@
   var pictureList = document.querySelector('.pictures')
 
   var selectPicture = function (id) {
-    bigPicture.classList.remove('hidden');
-    renderBigPicture(photos[id]);
+    window.picture.bigPicture.classList.remove('hidden');
+    window.picture.renderBigPicture(photos[id]);
     document.addEventListener('keydown', pictureKeyDownHandler);
   };
 
