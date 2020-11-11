@@ -111,6 +111,17 @@
     };
   });
 
+  var buttonFilteres = document.querySelectorAll('.img-filters__button');
+
+  for (var i = 0; i < buttonFilteres.length; i++) {
+    buttonFilteres[i].addEventListener('click', function () {
+      for (var j = 0; j < buttonFilteres.length; j++) {
+        buttonFilteres[j].classList.remove('img-filters__button--active');
+      };
+      this.classList.toggle('img-filters__button--active');
+    });
+  };
+
   window.pictureFilter = {
     pictureFilter: pictureFilter,
     cleanForm: function () {
@@ -120,6 +131,10 @@
       var mainForm = document.querySelector('.img-upload__form');
       mainForm.reset();
       openSlider();
+    },
+    openFilter: function () {
+      var filters = document.querySelector('.img-filters');
+      filters.classList.toggle('img-filters--inactive');
     }
   };
 

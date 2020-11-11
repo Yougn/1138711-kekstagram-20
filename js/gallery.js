@@ -27,10 +27,39 @@
     return fragment;
   };
 
-  // Загрузка фотографий с сервера
+  var removePictures = function () {
+    pictureList.innerHTML = '';
+  };
+
+  var filterPhotos = function (id) {
+    var photosArray = photos.slice();
+
+    if (id === 'filter-random') {
+      removePictures();
+      return photosArray.sort(function () { return 0.5 - Math.random() }).slice(0, 10);
+    } else if (id === 'filter-discussed') {
+      removePictures();
+      return photosArray.sort(function (a, b) { return b.comments.length - a.comments.length });
+    } else if (id === 'filter-default') {
+      removePictures();
+      return photosArray;
+    };
+  };
+
+  var sorting = document.querySelector('.img-filters__form');
+
+  sorting.addEventListener('click', function (evt) {
+    var id = evt.target.id;
+    window.resultPicture = filterPhotos(id);
+    pictureList.appendChild(createFragment(window.resultPicture));
+  });
+
   window.backend.load(function (photos) {
-    pictureList.appendChild(createFragment(photos));
     window.photos = photos;
+
+    pictureList.appendChild(createFragment(photos));
+
+    window.pictureFilter.openFilter();
   }, window.showErrorMessage);
 
 })();
