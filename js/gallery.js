@@ -32,7 +32,7 @@
   };
 
   var filterPhotos = function (id) {
-    var photosArray = window.resultPicture.slice();
+    var photosArray = photos.slice();
 
     if (id === 'filter-random') {
       removePictures();
@@ -59,9 +59,10 @@
   });
 
   window.backend.load(function (photos) {
-    window.resultPicture = photos;
+    window.photos = photos;
+    window.resultPicture = photos
 
-    drawPhotos('filter-default');
+    pictureList.appendChild(createFragment(photos));
 
     window.pictureFilter.openFilter();
   }, window.showErrorMessage);

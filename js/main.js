@@ -30,6 +30,7 @@
   var MIN_X = 0;
   var MAX_X = 453;
   var PIN_WIDTH = 18;
+  var NUMBER_COMMENTS = 5;
 
   window.main = {
     DESCRIPTIONS: DESCRIPTIONS,
@@ -55,7 +56,8 @@
     NUMBER_HASHTAGS: NUMBER_HASHTAGS,
     MIN_X: MIN_X,
     MAX_X: MAX_X,
-    PIN_WIDTH: PIN_WIDTH
+    PIN_WIDTH: PIN_WIDTH,
+    NUMBER_COMMENTS: NUMBER_COMMENTS
   };
 
 })();
