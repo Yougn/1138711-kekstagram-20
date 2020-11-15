@@ -6,7 +6,7 @@
 
   var selectPicture = function (id) {
     window.picture.bigPicture.classList.remove('hidden');
-    window.picture.renderBigPicture(window.resultPicture[id]);
+    window.picture.renderBigPicture(window.resultPictures[id]);
     document.addEventListener('keydown', pictureKeyDownHandler);
   };
 

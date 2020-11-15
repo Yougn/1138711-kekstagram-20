@@ -27,28 +27,26 @@
     return fragment;
   };
 
+  var filterPhotos = function (id) {
+    var photosLists = photos.slice();
+
+    if (id === window.main.FILTER_RANDOM) {
+      return photosLists.sort(function () { return 0.5 - Math.random() }).slice(0, 10);
+    } else if (id === window.main.FILTER_DISCUSSED) {
+      return photosLists.sort(function (a, b) { return b.comments.length - a.comments.length });
+    } else if (id === window.main.FILTER_DEFAULT) {
+      return photosLists;
+    };
+  };
+
   var removePictures = function () {
     pictureList.innerHTML = '';
   };
 
-  var filterPhotos = function (id) {
-    var photosArray = photos.slice();
-
-    if (id === 'filter-random') {
-      removePictures();
-      return photosArray.sort(function () { return 0.5 - Math.random() }).slice(0, 10);
-    } else if (id === 'filter-discussed') {
-      removePictures();
-      return photosArray.sort(function (a, b) { return b.comments.length - a.comments.length });
-    } else if (id === 'filter-default') {
-      removePictures();
-      return photosArray;
-    };
-  };
-
   var drawPhotos = window.debounce(function (id) {
-    window.resultPicture = filterPhotos(id);
-    pictureList.appendChild(createFragment(window.resultPicture));
+    window.resultPictures = filterPhotos(id);
+    removePictures();
+    pictureList.appendChild(createFragment(window.resultPictures));
   });
 
   var sorting = document.querySelector('.img-filters__form');
@@ -58,9 +56,10 @@
     drawPhotos(id);
   });
 
+  // Загрузка данных с сервера
   window.backend.load(function (photos) {
     window.photos = photos;
-    window.resultPicture = photos
+    window.resultPictures = photos
 
     pictureList.appendChild(createFragment(photos));
 

@@ -59,9 +59,13 @@
     successButton.addEventListener('keydown', bannerPushButtonHendler);
   };
 
-  var closeBanner = function () {
-    var message = document.querySelector('.success');
+  var closePopUp = function (nameClass) {
+    var message = document.querySelector(nameClass);
     message.remove();
+  };
+
+  var closeBanner = function () {
+    closePopUp('.success');
 
     document.removeEventListener('click', bannerClickHendler);
     document.removeEventListener('keydown', bannerKeyDownHendler);
@@ -94,8 +98,7 @@
   };
 
   var closeBannerError = function () {
-    var message = document.querySelector('.error');
-    message.remove();
+    closePopUp('.error');
 
     document.removeEventListener('click', bannerErrorClickHendler);
     document.removeEventListener('keydown', bannerErrorKeyDownHendler);
