@@ -2,7 +2,7 @@
 
 (function () {
 
-  var mainPicture = document.querySelector('.big-picture');
+  var mainPhoto = document.querySelector('.big-picture');
   var body = document.querySelector('body');
 
   var buttonCloseBigPicture = document.querySelector('.big-picture__cancel');
@@ -21,15 +21,15 @@
   };
 
   window.picture = {
-    mainPicture: mainPicture,
     body: body,
+    mainPhoto: mainPhoto,
     renderBigPicture: function (photo) {
 
-      mainPicture.querySelector('.big-picture__img img').src = photo.url;
-      mainPicture.querySelector('.likes-count').textContent = photo.likes;
-      mainPicture.querySelector('.social__caption').textContent = photo.description;
+      mainPhoto.querySelector('.big-picture__img img').src = photo.url;
+      mainPhoto.querySelector('.likes-count').textContent = photo.likes;
+      mainPhoto.querySelector('.social__caption').textContent = photo.description;
 
-      var pictureComments = mainPicture.querySelector('.social__comments');
+      var pictureComments = mainPhoto.querySelector('.social__comments');
       pictureComments.innerHTML = '';
 
       var renderComments = function () {
@@ -57,7 +57,7 @@
       };
 
       window.closePicture = function () {
-        mainPicture.classList.add('hidden');
+        mainPhoto.classList.add('hidden');
         body.classList.remove('modal-open');
         deletePictureKeyDownHandler();
         comments = [];
@@ -68,14 +68,14 @@
       var comments = Array.prototype.slice.call(commentsUsers);
 
       var makeComments = function (number) {
-        var commentsList = comments.slice(0, number)
-        for (var i = 0; i < commentsList.length; i++) {
-          pictureComments.appendChild(commentsList[i]);
+        var commentsLists = comments.slice(0, number)
+        for (var i = 0; i < commentsLists.length; i++) {
+          pictureComments.appendChild(commentsUsers[i]);
         };
-        if (commentsList.length === photo.comments.length) {
+        if (commentsLists.length === photo.comments.length) {
           commentLoader.classList.add('hidden');
         };
-        mainPicture.querySelector('.social__comment-count').textContent = commentsList.length + ' из ' + photo.comments.length + ' комментариев';
+        mainPhoto.querySelector('.social__comment-count').textContent = commentsLists.length + ' из ' + photo.comments.length + ' комментариев';
       };
 
       var addComments = function () {
