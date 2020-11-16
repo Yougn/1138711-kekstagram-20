@@ -13,7 +13,7 @@
         fieldControlValue += window.main.STEP;
         fieldControl.value = fieldControlValue + "%";
       };
-      pictureFilter.style.transform = 'scale(' + fieldControlValue / 100 + ')';
+      window.pictureFilter.pictureFilter.style.transform = 'scale(' + fieldControlValue / 100 + ')';
     });
 
     buttonMinus.addEventListener('click', function () {
@@ -21,7 +21,7 @@
         fieldControlValue -= window.main.STEP;
         fieldControl.value = fieldControlValue + "%";
       };
-      pictureFilter.style.transform = 'scale(' + fieldControlValue / 100 + ')';
+      window.pictureFilter.pictureFilter.style.transform = 'scale(' + fieldControlValue / 100 + ')';
     });
   };
 

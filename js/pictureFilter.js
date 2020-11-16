@@ -2,18 +2,7 @@
 
 (function () {
 
-  window.pictureFilter = document.querySelector('.img-upload__preview');
-
-  window.cleanForm = function () {
-    pictureFilter.style.transform = 'scale(1)';
-    pictureFilter.style.filter = '';
-
-    pictureFilter.classList.remove('effects__preview--' + currentFilter);
-
-    var mainForm = document.querySelector('.img-upload__form');
-    mainForm.reset();
-    openSlider();
-  };
+  var pictureFilter = document.querySelector('.img-upload__preview');
 
   var sliderPin = document.querySelector('.effect-level__pin');
 
@@ -121,5 +110,32 @@
       closeSlider();
     };
   });
+
+  var buttonFilteres = document.querySelectorAll('.img-filters__button');
+
+  for (var i = 0; i < buttonFilteres.length; i++) {
+    buttonFilteres[i].addEventListener('click', function () {
+      for (var j = 0; j < buttonFilteres.length; j++) {
+        buttonFilteres[j].classList.remove('img-filters__button--active');
+      };
+      this.classList.toggle('img-filters__button--active');
+    });
+  };
+
+  window.pictureFilter = {
+    pictureFilter: pictureFilter,
+    cleanForm: function () {
+      pictureFilter.style.transform = 'scale(1)';
+      pictureFilter.style.filter = '';
+      pictureFilter.classList.remove('effects__preview--' + currentFilter);
+      var mainForm = document.querySelector('.img-upload__form');
+      mainForm.reset();
+      openSlider();
+    },
+    openFilter: function () {
+      var filters = document.querySelector('.img-filters');
+      filters.classList.toggle('img-filters--inactive');
+    }
+  };
 
 })();
